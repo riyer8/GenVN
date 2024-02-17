@@ -1,0 +1,2 @@
+# GenVN
+Generative Visual Novel
