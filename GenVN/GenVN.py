@@ -1,5 +1,3 @@
-"""Welcome to Reflex! This file outlines the steps to create a basic app."""
-
 from rxconfig import config
 import reflex as rx
 from monsterapi import client
@@ -8,6 +6,8 @@ import env
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
 filename = f"{config.app_name}/{config.app_name}.py"
+
+# Monster API client and request base info
 monster_client = client(os.environ["MONSTER_API_KEY"])
 models = {"text": 'llama2-7b-chat', "image": 'sdxl-base', "img_mod": 'photo-maker'}
 input_data = {
@@ -40,9 +40,10 @@ input_data = {
   "seed": 2414, 
 }}
 
-
 class State(rx.State):
     """The app state."""
+    # Returns llama generated text
+    # result = monster_client.generate(models["text"], input_data["text"])
 
 def index() -> rx.Component:
     return rx.center(
