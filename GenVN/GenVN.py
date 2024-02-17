@@ -40,7 +40,7 @@ input_data = {
   "seed": 2414, 
 }}
 
-class State(rx.State):
+class TextState(rx.State):
     """The app state."""
     # Returns llama generated text
     # result = monster_client.generate(models["text"], input_data["text"])
