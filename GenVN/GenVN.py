@@ -93,7 +93,7 @@ class State(rx.State):
             updateSummary(summary, self.prompt, self.response)
         input_data["text"]['prompt'] = self.prompt # Replace this with auto-determined
         text_output = monster_client.generate(models["text"], input_data["text"])["text"]
-        prompts_given += 1
+        self.prompts_given += 1
         self.prompt = ""
         self.response = text_output
         print(self.response + '\n')
