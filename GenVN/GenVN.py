@@ -7,6 +7,7 @@ import env
 from GenVN import home_page
 from GenVN import navbar
 from GenVN.TextGeneration import modifyFirstPrompt, modifyLaterPrompt
+from GenVN.TextGeneration import modifyFirstPrompt, modifyLaterPrompt, createCharacter
 from GenVN.ImageGeneration import createSettingSummary, modifiedCreateImage
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
@@ -55,6 +56,7 @@ class State(rx.State):
     image_url = "/black_background.jpeg"
     character_image_url = ""
     prompts_given = 0 # Number of prompts inputted thus far
+    character_description = ""
 
     processing = False
     complete = False
@@ -98,6 +100,8 @@ class State(rx.State):
             return rx.window_alert("Prompt Empty")
         self.get_and_replace_response_text()
         self.get_and_replace_image()
+        if (self.prompts_given == 0):
+            self.character_description = createCharacter(self.prompt)
         self.prompts_given += 1
 
     async def realResponse(self):
