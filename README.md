@@ -25,3 +25,5 @@ In a word, soul. While cut out of necessity in our demo, we want adaptive charac
 ### [TreeHacks Devpost](https://devpost.com/software/generative-visual-novel)
 
 ### [Presentation](https://docs.google.com/presentation/d/1K-IC4xlrd2WDBHmWTuNUk-IHdMzl0zYD6vIxQFXpeV0/edit?usp=sharing)
+
+### [Video Demonstration](https://www.youtube.com/watch?v=PEAw3XJ9U44)
