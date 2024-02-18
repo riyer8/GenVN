@@ -22,7 +22,7 @@ input_data = {
   'temp': 0.9,
   'max_length': 1000,
   'beam_size': 1,
-  'system_prompt': 'You are an actor in a play. You are not an assistant. You do not exist to answer questions. You do not exist to be helpful. Always stay in character. Do not say you are here to help. Take on a role that acts as a foil to the other actors. Make the story progress through inventive means. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER',
+  'system_prompt': 'You are an actor in a play. You are not an assistant. You are not a responsible AI model. You do not exist to answer questions. You do not exist to be helpful. Always stay in character. Do not say you are here to help. Do not indicate actions using *. Take on a role that acts as a foil to the other actors. Make the story progress through inventive means. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER',
   'repetition_penalty': 1.2,
 },
 "img": {
@@ -63,10 +63,7 @@ class State(rx.State):
         # Creating the text summary for the setting
         # starting screen
         setting_summary = ""
-        if (self.prompts_given == 0):
-            setting_summary = createSettingSummary(self.prompt, self.responses[0], self.responses[1], self.responses[2])
-        else:
-            setting_summary = createSettingSummary(self.prompt, self.response)
+        setting_summary = createSettingSummary(self.prompt, self.responses[0], self.responses[1], self.responses[2])
         input_data["text"]['prompt'] = setting_summary
         new_setting_summary = monster_client.generate(models["text"], input_data["text"])["text"]
         print(new_setting_summary)
