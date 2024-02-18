@@ -47,9 +47,9 @@ image_output = None
 
 class State(rx.State):
     """The app state."""
-    response = ""
+    response = "Welcome to the world of GenVN! This is the response box; as soon as you write your first prompt, your reply will spawn here."
     prompt = ""
-    image_url = ""
+    background_image_url = "/black_background.jpeg"
     character_image_url = ""
     prompts_given = 0 # Number of prompts inputted thus far
     summary = "" #summary of the story we keep and update constantly
@@ -59,9 +59,10 @@ class State(rx.State):
     chat_history = ""
     def get_and_replace_image(self):
         """Get the image from the prompt."""
-        input_data["img"]['prompt'] = self.prompt # Replace this with auto-determined
+        input_data["img"]['prompt'] = self.prompt # Replace this with auto-determine
         image_output = monster_client.generate(models["image"], input_data["img"])["output"]
         self.image_url = image_output[0]
+        print(self.image_url)
     
     def get_and_replace_response_text(self):
         """Get the response text from the prompt"""
@@ -111,7 +112,7 @@ def textBox() -> rx.Component:
      return rx.box(
         rx.container(
             rx.card(
-                rx.text(State.response),
+                rx.text_area(value=State.response, read_only=True),
                 rx.input(placeholder="Response here",
                          on_change=State.set_prompt,
                          value=State.prompt),
