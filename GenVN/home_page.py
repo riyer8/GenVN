@@ -32,16 +32,16 @@ def home() -> rx.Component:
                 rx.text("A choose your own adventure story powered by LLMs",style=subheading_title),   
             
             
-        rx.text("📚 Explore a galaxy of creativity with our AI-powered platform! 🌌✨ Dive into a universe of possibilities, where every story is unique! 💫 Romance, mystery, fantasy, sci-fi, horror – you name it, we've got it! 🚀🔮 Unleash your imagination and craft your own destiny! 🎭📝 Start your adventure today and let the storytelling begin! 🌟🎮"),
+        rx.text("📚 Explore a galaxy of creativity with our AI-powered platform! 🌌 Dive into a universe of possibilities, where every story is unique! Romance, mystery, fantasy, sci-fi, horror – you name it, we've got it! 🚀🔮 Unleash your imagination and craft your own destiny! 🎭📝 Start your adventure today and let the storytelling begin! 🎮"),
            
            
             
-            rx.link(rx.button("Get Fantasizing"), href="http://localhost:3000/story/"),
             height="auto",
             ),
             direction="column",
             spacing="3",
         ),
+        rx.link(rx.button("Get Fantasizing"), href="http://localhost:3000/story/"),
         background="#d5ebc7",
         style=home_style
     )

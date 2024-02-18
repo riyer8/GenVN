@@ -52,7 +52,8 @@ character_output = None
 
 """The app state."""
 class State(rx.State):
-    response = "Welcome to the world of GenVN! This is the response box; as soon as you write your first prompt, a reply will spawn here."
+    """The app state."""
+    response = "A castle stands in the distance. Your trusty companion, Bartholomew, says to you from behind, \"We\'re ready.\" Now is your moment. What do you do?"
     responses = ["", "", ""]
     prompt = ""
     image_url = monster_client.generate(models["image"], input_data["img"])["output"][0]
@@ -156,15 +157,16 @@ def index() -> rx.Component:
         rx.box(
             textBox(),
             rx.center(
-                rx.button("Generate Image", on_click=State.update_state, width="25em"),
+                rx.button("Advance Story", on_click=State.update_state, width="25em"),
             ),
             position="fixed",
             bottom="0",
             width ="100%",
-         
+            background_color="black"
         ),
         flex_direction="column",
         width="100%",
+        background_color="black"
    
     )
 
