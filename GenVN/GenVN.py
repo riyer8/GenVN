@@ -153,7 +153,7 @@ def index() -> rx.Component:
     return rx.center(
         navbar.navbar(),
         rx.box(
-            rx.image(src=State.image_url, width="80%"),
+            rx.image(src=State.image_url, width="100%"),
             #rx.image(src=State.character_image_url, width="20em"),
             #style=image_style
         ),
