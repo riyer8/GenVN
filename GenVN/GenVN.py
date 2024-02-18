@@ -8,8 +8,8 @@ docs_url = "https://reflex.dev/docs/getting-started/introduction"
 filename = f"{config.app_name}/{config.app_name}.py"
 
 # Monster API client and request base info
-#monster_client = client(os.environ["MONSTER_API_KEY"])
-#models = {"text": 'llama2-7b-chat', "image": 'sdxl-base', "img_mod": 'photo-maker'}
+monster_client = client(os.environ["MONSTER_API_KEY"])
+models = {"text": 'llama2-7b-chat', "image": 'sdxl-base', "img_mod": 'photo-maker'}
 input_data = {
 "text": {
   'prompt': 'Whats the meaning of life?',
