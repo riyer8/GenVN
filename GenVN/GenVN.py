@@ -7,14 +7,13 @@ from GenVN import home_page
 from GenVN import navbar
 from GenVN.TextGeneration import modifyFirstPrompt, modifyLaterPrompt
 from GenVN.ImageGeneration import createSettingSummary, modifiedCreateImage
-from GenVN.CharacterGeneration import characterDescription, modifyCharacterPrompt
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
 filename = f"{config.app_name}/{config.app_name}.py"
 
 # Monster API client and request base info
 monster_client = client(os.environ["MONSTER_API_KEY"])
-models = {"text": 'llama2-7b-chat', "image": 'sdxl-base', "img_mod": 'photo-maker'}
+models = {"text": 'llama2-7b-chat', "image": 'sdxl-base'}
 input_data = {
 "text": {
     'prompt': 'Whats the meaning of life?',
@@ -36,15 +35,8 @@ input_data = {
     "steps": 70,
     "style": "no-style"
 },
-"img_mod": {
-    "prompt": "a man wearing a leather jacket",
-    "init_image_url": "www.example.com/image_jpeg",
-    "negprompt": "deformed, bad anatomy, disfigured, poorly drawn face",
-    "steps": 40,
-    "samples": 1,
-    "strength": 40,
-    "seed": 2414, 
-}}
+}
+
 image_output = None
 character_output = None
 
@@ -95,14 +87,6 @@ class State(rx.State):
             return rx.window_alert("Prompt Empty")
         self.get_and_replace_response_text()
         self.get_and_replace_image()
-        if (self.prompts_given == 0):
-            self.character_description = characterDescription(self.prompt)
-            input_data["text"]['prompt'] = self.character_description
-            characteristics = monster_client.generate(models["text"], input_data["text"])["text"][1:]
-            character_output = modifyCharacterPrompt(characteristics)
-            input_data["img"]['prompt'] = character_output
-            character_output = monster_client.generate(models["image"], input_data["img"])["output"]
-            self.character_image_url = character_output[0]
         self.prompts_given += 1
 
     """Yield here to clear the frontend input before continuing."""
