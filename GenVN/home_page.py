@@ -42,6 +42,7 @@ def home() -> rx.Component:
             spacing="3",
         ),
         rx.link(rx.button("Get Fantasizing", size = "4")), href="http://localhost:3000/story/"),
+        spacing = "5",
         background="#d5ebc7",
         style=home_style
     )
