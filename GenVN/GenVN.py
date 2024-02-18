@@ -49,6 +49,8 @@ class State(rx.State):
     prompt = ""
     background_image_url = ""
     character_image_url = ""
+    prompts_given = 0 # Number of prompts inputted thus far
+    summary = "" #summary of the story we keep and update constantly
 
     processing = False
     complete = False
@@ -61,8 +63,15 @@ class State(rx.State):
     
     def get_and_replace_response_text(self):
         """Get the response text from the prompt"""
+        if (prompts_given == 0):
+            modifyFirstPrompt(self.prompt)
+            summary = createSummary(self.prompt, self.response)
+        else:
+            modifyLaterPrompt(self.prompt, summary)
+            updateSummary(summary, self.prompt, self.response)
         input_data["text"]['prompt'] = self.prompt # Replace this with auto-determined
         text_output = monster_client.generate(models["text"], input_data["text"])["text"]
+        prompts_given += 1
         self.prompt = ""
         self.response = text_output
     
