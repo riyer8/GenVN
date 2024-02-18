@@ -21,3 +21,7 @@ Learning new frameworks from scratch and under time constraints is a fun challen
 
 ## What's Next for Generative Visual Novel (GenVN)
 In a word, soul. While cut out of necessity in our demo, we want adaptive character portraits/models (which change based on the tone of the AI’s reply) to be integrated into our narrative experience to represent the characters that the user talks to. We can only really improve further human-AI cooperation if we can put a face to each mechanical voice. Our first step would be to generate base character designs with Stable Diffusion XL and then modify these base models with PhotoMaker (a Monster API model that modifies images based on text) to breathe life into the generated personalities. We also want to implement a streaming stylization to text generation, printing the model’s response to the user one character at a time to give a more human feel to the model and improve the connection between the user and the machine. Finally, we want to implement a chat history system in which the user can easily swap between any moment in the conversation with the models to better enable specific interactions and outcomes in the narrative process.
+
+### [TreeHacks Devpost](https://devpost.com/software/generative-visual-novel)
+
+### [Presentation](https://docs.google.com/presentation/d/1K-IC4xlrd2WDBHmWTuNUk-IHdMzl0zYD6vIxQFXpeV0/edit?usp=sharing)
