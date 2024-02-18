@@ -49,24 +49,23 @@ input_data = {
 image_output = None
 character_output = None
 
+
+"""The app state."""
 class State(rx.State):
-    """The app state."""
     response = "Welcome to the world of GenVN! This is the response box; as soon as you write your first prompt, a reply will spawn here."
     responses = ["", "", ""]
     prompt = ""
     image_url = monster_client.generate(models["image"], input_data["img"])["output"][0]
     character_image_url = ""
-    prompts_given = 0 # Number of prompts inputted thus far
+    prompts_given = 0
     character_description = ""
 
     processing = False
     complete = False
 
+    """Get the image from the prompt."""
     def get_and_replace_image(self):
-        """Get the image from the prompt."""
-        # Creating the text summary for the setting
-        # starting screen
-        setting_summary = ""
+        # Creating the text summary for the setting starting screen
         setting_summary = createSettingSummary(self.prompt, self.responses[0], self.responses[1], self.responses[2])
         input_data["text"]['prompt'] = setting_summary
         new_setting_summary = monster_client.generate(models["text"], input_data["text"])["text"]
@@ -78,8 +77,8 @@ class State(rx.State):
         image_output = monster_client.generate(models["image"], input_data["img"])["output"]
         self.image_url = image_output[0]
     
+    """Get the response text from the prompt"""
     def get_and_replace_response_text(self):
-        """Get the response text from the prompt"""
         text_input = ""
         if (self.prompts_given == 0):
             text_input = modifyFirstPrompt(self.prompt)
@@ -108,8 +107,8 @@ class State(rx.State):
             self.character_image_url = character_output[0]
         self.prompts_given += 1
 
+    """Yield here to clear the frontend input before continuing."""
     async def realResponse(self):
-        # Yield here to clear the frontend input before continuing.
         await asyncio.sleep(0.1)
         self.chat_history = ""
         print(len(self.response))
@@ -140,25 +139,19 @@ def textBox() -> rx.Component:
         width="100%",
     )
 
-
 def index() -> rx.Component:
     image_style = {
         "position": "relative"
     }
     character_style = {
         "position": "absolute",
-        # "bottom": "0",
-        # "right": "0",
-         "width": "10%", 
-        #"height": "auto"
+         "width": "10%",
     }
     
     return rx.center(
         navbar.navbar(),
         rx.box(
             rx.image(src=State.image_url, width="100%"),
-            #rx.image(src=State.character_image_url, width="20em"),
-            #style=image_style
         ),
         rx.box(
             textBox(),
@@ -170,12 +163,10 @@ def index() -> rx.Component:
             width ="100%",
          
         ),
-        #rx.button("Generate Character Image", on_click=State.get_character, width="25em"),
         flex_direction="column",
         width="100%",
    
     )
-
 
 app = rx.App()
 app.add_page(index, route ="/story")
