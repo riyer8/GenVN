@@ -3,6 +3,7 @@ import reflex as rx
 import os
 import asyncio
 import env
+from GenVN import navbar
 
 def home() -> rx.Component:
     home_style = {
@@ -10,28 +11,42 @@ def home() -> rx.Component:
         "flex-direction": "column",
         "align-items": "center",
         # "justify-content": "center",
-        "height": "100vh"
+        "height": "100vh",
+        
     }
     title_style = {      
-        "font-size": "7rem",
+        "font-size": "9rem",
         "font-weight": "bold",
-        "margin-bottom": "20px"
+        "margin-bottom": "30px"
     }
     subheading_title = {
-        "font-size": "1.5rem",
+        "padding-top": "10px",
+        "font-size": "2rem",
         "margin-bottom": "20px"
     }
     return rx.center(
+        navbar.navbar(),
         rx.flex(
+            rx.container(
             rx.heading("GenVN", style=title_style),
-            rx.center(
+            
                 rx.text("A choose your own adventure story powered by LLMs",style=subheading_title),   
-            ),
+            
+            
+        rx.text("📚 Explore a galaxy of creativity with our AI-powered platform! 🌌✨ Dive into a universe of possibilities, where every story is unique! 💫 Romance, mystery, fantasy, sci-fi, horror – you name it, we've got it! 🚀🔮 Unleash your imagination and craft your own destiny! 🎭📝 Start your adventure today and let the storytelling begin! 🌟🎮"),
+           
+           
+            
             rx.link(rx.button("Get Fantasizing"), href="http://localhost:3000/story/"),
+            height="auto",
+            ),
             direction="column",
             spacing="3",
         ),
+        background="#d5ebc7",
         style=home_style
     )
+
+      
 
 

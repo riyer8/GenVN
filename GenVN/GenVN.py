@@ -5,6 +5,7 @@ import os
 import asyncio
 import env
 from GenVN import home_page
+from GenVN import navbar
 from GenVN.TextGeneration import modifyFirstPrompt, createSummary, modifyLaterPrompt, updateSummary
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
@@ -108,16 +109,18 @@ def textBox() -> rx.Component:
      return rx.box(
         rx.container(
             rx.card(
-                rx.text(State.response),
+                rx.text_area(State.response, read_only=True),
                 rx.input(placeholder="Response here",
                          on_change=State.set_prompt,
                          value=State.prompt),
                 width="100%",
+                #height="auto"
             ),
             size="4",
+        
         ),
-        background_color="var(--gray-3)",
-        width="100%",
+        width="100%"
+        
     )
 
 
@@ -130,23 +133,33 @@ def index() -> rx.Component:
         # "bottom": "0",
         # "right": "0",
          "width": "10%", 
-        #"height": "auto"
-    }
-    
+        "height": "auto"
+    }    
     return rx.center(
-        rx.box(
-            rx.image(src=State.image_url, width="20em"),
-            rx.image(src=State.character_image_url, width="20em"),
-            #style=image_style
-        ),
-        textBox(),
-        rx.button("Generate Image", on_click=State.update_state, width="25em"),
-        #rx.button("Generate Character Image", on_click=State.get_character, width="25em"),
-        flex_direction="column",
-        width="100%",
+            rx.box(
+                rx.image(src=State.image_url, width="60em"),
+                #rx.image(src=State.character_image_url, width="20em"),
+                #style=image_style
+            ),
+            textBox(),
+            rx.button("Generate Image", on_click=State.update_state, width="25em"),
+            #rx.button("Generate Character Image", on_click=State.get_character, width="25em"),
+            flex_direction="column",
+            width="100%",
+            background_color="var(--gray-3)"
+            #position="fixed",
+            #bottom="0"
     )
+        
 
 
-app = rx.App()
+app = rx.App(
+    theme=rx.theme(
+        appearance="light",
+        has_background=True,
+        radius="large",
+        accent_color="plum"
+    ))
+
 app.add_page(index, route ="/story")
 app.add_page(home_page.home, route="/")
