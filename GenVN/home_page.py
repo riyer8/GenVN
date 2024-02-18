@@ -1,8 +1,5 @@
 from rxconfig import config
 import reflex as rx
-import os
-import asyncio
-import env
 from GenVN import navbar
 
 def home() -> rx.Component:
@@ -33,15 +30,12 @@ def home() -> rx.Component:
             
             
         rx.text("📚 Explore a galaxy of creativity with our AI-powered platform! 🌌 Dive into a universe of possibilities, where every story is unique! Romance, mystery, fantasy, sci-fi, horror – you name it, we've got it! 🚀🔮 Unleash your imagination and craft your own destiny! 🎭📝 Start your adventure today and let the storytelling begin! 🎮"),
-           
-           
-            
             height="auto",
             ),
             direction="column",
             spacing="3",
         ),
-        rx.link(rx.button("Get Fantasizing", size = "4")), href="http://localhost:3000/story/"),
+        rx.link(rx.button("Get Fantasizing", size = "4"), href="http://localhost:3000/story/"),
         spacing = "5",
         background="#d5ebc7",
         style=home_style

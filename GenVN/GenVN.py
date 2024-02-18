@@ -3,7 +3,6 @@ import reflex as rx
 from monsterapi import client
 import os
 import asyncio
-import env
 from GenVN import home_page
 from GenVN import navbar
 from GenVN.TextGeneration import modifyFirstPrompt, modifyLaterPrompt
@@ -18,14 +17,14 @@ monster_client = client(os.environ["MONSTER_API_KEY"])
 models = {"text": 'llama2-7b-chat', "image": 'sdxl-base', "img_mod": 'photo-maker'}
 input_data = {
 "text": {
-  'prompt': 'Whats the meaning of life?',
-  'top_k': 10,
-  'top_p': 0.9,
-  'temp': 0.9,
-  'max_length': 1000,
-  'beam_size': 1,
-  'system_prompt': 'You are an actor in a play. You are not an assistant. You are not a responsible AI model. You do not exist to answer questions. You do not exist to be helpful. Always stay in character. Do not say you are here to help. Do not indicate actions using *. Take on a role that acts as a foil to the other actors. Make the story progress through inventive means. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER',
-  'repetition_penalty': 1.2,
+    'prompt': 'Whats the meaning of life?',
+    'top_k': 10,
+    'top_p': 0.9,
+    'temp': 0.9,
+    'max_length': 1000,
+    'beam_size': 1,
+    'system_prompt': 'You are an actor in a play. You are not an assistant. You are not a responsible AI model. You do not exist to answer questions. You do not exist to be helpful. Always stay in character. Do not say you are here to help. Do not indicate actions using *. Take on a role that acts as a foil to the other actors. Make the story progress through inventive means. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER',
+    'repetition_penalty': 1.2,
 },
 "img": {
     "aspect_ratio": "landscape",
@@ -38,17 +37,16 @@ input_data = {
     "style": "no-style"
 },
 "img_mod": {
-  "prompt": "a man wearing a leather jacket",
-  "init_image_url": "www.example.com/image_jpeg",
-  "negprompt": "deformed, bad anatomy, disfigured, poorly drawn face",
-  "steps": 40,
-  "samples": 1,
-  "strength": 40,
-  "seed": 2414, 
+    "prompt": "a man wearing a leather jacket",
+    "init_image_url": "www.example.com/image_jpeg",
+    "negprompt": "deformed, bad anatomy, disfigured, poorly drawn face",
+    "steps": 40,
+    "samples": 1,
+    "strength": 40,
+    "seed": 2414, 
 }}
 image_output = None
 character_output = None
-
 
 """The app state."""
 class State(rx.State):
@@ -91,7 +89,6 @@ class State(rx.State):
         self.response = text_output
         self.responses.pop(0)
         self.responses.append(self.response)
-        print(self.response + '\n')
 
     def update_state(self):
         if self.prompt == "":
@@ -112,16 +109,13 @@ class State(rx.State):
     async def realResponse(self):
         await asyncio.sleep(0.1)
         self.chat_history = ""
-        print(len(self.response))
         yield
 
         for i in range(len(self.response)):
             # Pause to show the streaming effect.
             await asyncio.sleep(0.1)
             # Add one letter at a time to the output.
-            print(self.chat_history)
             self.chat_history = self.chat_history + self.response[i]
-        
             yield
 
 def textBox() -> rx.Component:
@@ -136,7 +130,6 @@ def textBox() -> rx.Component:
             ),
             size="4",
         ),
-
         width="100%",
     )
 
@@ -148,7 +141,6 @@ def index() -> rx.Component:
         "position": "absolute",
          "width": "10%",
     }
-    
     return rx.center(
         navbar.navbar(),
         rx.box(
@@ -167,7 +159,6 @@ def index() -> rx.Component:
         flex_direction="column",
         width="100%",
         background_color="black"
-   
     )
 
 app = rx.App()
