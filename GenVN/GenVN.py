@@ -125,7 +125,7 @@ def textBox() -> rx.Component:
      return rx.box(
         rx.container(
             rx.card(
-                rx.text_area(value=State.response, read_only=True),
+                rx.text_area(value=State.response, read_only=True,rows="7"),
                 rx.input(placeholder="Response here",
                          on_change=State.set_prompt,
                          value=State.prompt),
