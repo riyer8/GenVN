@@ -2,6 +2,7 @@ from rxconfig import config
 import reflex as rx
 from monsterapi import client
 import os
+import asyncio
 import env
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
@@ -44,6 +45,7 @@ image_output = None
 
 class State(rx.State):
     """The app state."""
+    response = ""
     prompt = ""
     background_image_url = ""
     character_image_url = ""
@@ -51,14 +53,24 @@ class State(rx.State):
     processing = False
     complete = False
 
-    def get_image(self):
+    def get_and_replace_image(self):
         """Get the image from the prompt."""
-        if self.prompt == "":
-            return rx.window_alert("Prompt Empty")  
         input_data["img"]['prompt'] = self.prompt # Replace this with auto-determined
         image_output = monster_client.generate(models["image"], input_data["img"])["output"]
         self.image_url = image_output[0]
+    
+    def get_and_replace_response_text(self):
+        """Get the response text from the prompt"""
+        input_data["text"]['prompt'] = self.prompt # Replace this with auto-determined
+        text_output = monster_client.generate(models["text"], input_data["text"])["text"]
         self.prompt = ""
+        self.response = text_output
+    
+    def update_state(self):
+        if self.prompt == "":
+            return rx.window_alert("Prompt Empty")
+        self.get_and_replace_image()
+        self.get_and_replace_response_text()
 
 
 
@@ -101,7 +113,7 @@ def index() -> rx.Component:
             #style=image_style
         ),
         textBox(),
-        rx.button("Generate Image", on_click=State.get_image, width="25em"),
+        rx.button("Generate Image", on_click=State.get_and_replace_image, width="25em"),
         rx.button("Generate Character Image", on_click=State.get_character, width="25em"),
         flex_direction="column",
         width="100%",
