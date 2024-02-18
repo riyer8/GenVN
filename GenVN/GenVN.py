@@ -5,7 +5,7 @@ import os
 import asyncio
 import env
 from GenVN import home_page
-from GenVN.TextGeneration import modifyFirstPrompt, createSummary, modifyLaterPrompt, updateSummary
+from GenVN.TextGeneration import modifyFirstPrompt, modifyLaterPrompt
 from GenVN.ImageGeneration import createSettingSummary, modifiedCreateImage
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
@@ -22,7 +22,7 @@ input_data = {
   'temp': 0.9,
   'max_length': 1000,
   'beam_size': 1,
-  'system_prompt': 'You are an actor in a play. You do not exist to answer questions. You do not exist to be helpful. Always stay in character. Take on a role that acts as a foil to the other actors. Make the story progress through inventive means. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER',
+  'system_prompt': 'You are an actor in a play. You are not an assistant. You do not exist to answer questions. You do not exist to be helpful. Always stay in character. Do not say you are here to help. Take on a role that acts as a foil to the other actors. Make the story progress through inventive means. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER',
   'repetition_penalty': 1.2,
 },
 "img": {
@@ -49,11 +49,11 @@ image_output = None
 class State(rx.State):
     """The app state."""
     response = "Welcome to the world of GenVN! This is the response box; as soon as you write your first prompt, your reply will spawn here."
+    responses = ["", "", ""]
     prompt = ""
     image_url = "/black_background.jpeg"
     character_image_url = ""
     prompts_given = 0 # Number of prompts inputted thus far
-    summary = "" #summary of the story we keep and update constantly
 
     processing = False
     complete = False
@@ -64,7 +64,7 @@ class State(rx.State):
         # starting screen
         setting_summary = ""
         if (self.prompts_given == 0):
-            setting_summary = createSettingSummary(self.prompt, "")
+            setting_summary = createSettingSummary(self.prompt, self.responses[0], self.responses[1], self.responses[2])
         else:
             setting_summary = createSettingSummary(self.prompt, self.response)
         input_data["text"]['prompt'] = setting_summary
@@ -82,14 +82,14 @@ class State(rx.State):
         text_input = ""
         if (self.prompts_given == 0):
             text_input = modifyFirstPrompt(self.prompt)
-            self.summary = createSummary(self.prompt)
         else:
-            text_input = modifyLaterPrompt(self.prompt, self.summary)
-            self.summary = updateSummary(self.summary, self.prompt, self.response)
+            text_input = modifyLaterPrompt(self.prompt, self.response)
         input_data["text"]['prompt'] = text_input
         text_output = monster_client.generate(models["text"], input_data["text"])["text"][1:]
         self.prompt = ""
         self.response = text_output
+        self.responses.pop(0)
+        self.responses.append(self.response)
         print(self.response + '\n')
         #self.realResponse()
         #print(self.chat_history)
