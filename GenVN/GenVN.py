@@ -6,6 +6,7 @@ import asyncio
 import env
 from GenVN import home_page
 from GenVN.TextGeneration import modifyFirstPrompt, createSummary, modifyLaterPrompt, updateSummary
+from GenVN.ImageGeneration import createSettingSummary, modifiedCreateImage
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
 filename = f"{config.app_name}/{config.app_name}.py"
@@ -49,7 +50,7 @@ class State(rx.State):
     """The app state."""
     response = "Welcome to the world of GenVN! This is the response box; as soon as you write your first prompt, your reply will spawn here."
     prompt = ""
-    background_image_url = "/black_background.jpeg"
+    image_url = "/black_background.jpeg"
     character_image_url = ""
     prompts_given = 0 # Number of prompts inputted thus far
     summary = "" #summary of the story we keep and update constantly
@@ -59,14 +60,29 @@ class State(rx.State):
     chat_history = ""
     def get_and_replace_image(self):
         """Get the image from the prompt."""
-        input_data["img"]['prompt'] = self.prompt # Replace this with auto-determine
+        # Creating the text summary for the setting
+        # starting screen
+        if (self.prompts_given == 0):
+            pass
+        else:
+            createSettingSummary(self.prompt, self.response)
+        input_data["text"]['prompt'] = self.prompt
+        summary = monster_client.generate(models["text"], input_data["text"])["text"]
+
+        # Creating the image from the text summary
+        if (self.prompts_given == 0):
+            pass
+        else:
+            self.prompt = modifiedCreateImage(summary)
+
+        input_data["img"]['prompt'] = self.prompt
         image_output = monster_client.generate(models["image"], input_data["img"])["output"]
         self.image_url = image_output[0]
         print(self.image_url)
     
     def get_and_replace_response_text(self):
         """Get the response text from the prompt"""
-        if (prompts_given == 0):
+        if (self.prompts_given == 0):
             print (self.prompt)
             modifyFirstPrompt(self.prompt)
             print (self.prompt)
