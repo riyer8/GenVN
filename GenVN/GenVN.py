@@ -4,6 +4,7 @@ from monsterapi import client
 import os
 import asyncio
 import env
+from GenVN import home_page
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
 filename = f"{config.app_name}/{config.app_name}.py"
@@ -47,12 +48,12 @@ class State(rx.State):
     """The app state."""
     response = ""
     prompt = ""
-    background_image_url = ""
+    image_url = ""
     character_image_url = ""
-
+    streamResponse = ""
     processing = False
     complete = False
-
+    chat_history = ""
     def get_and_replace_image(self):
         """Get the image from the prompt."""
         input_data["img"]['prompt'] = self.prompt # Replace this with auto-determined
@@ -65,6 +66,10 @@ class State(rx.State):
         text_output = monster_client.generate(models["text"], input_data["text"])["text"]
         self.prompt = ""
         self.response = text_output
+        print(self.response + '\n')
+        #self.realResponse()
+        print(self.chat_history)
+
     
     def update_state(self):
         if self.prompt == "":
@@ -72,14 +77,28 @@ class State(rx.State):
         self.get_and_replace_image()
         self.get_and_replace_response_text()
 
+    async def realResponse(self):
+        # Yield here to clear the frontend input before continuing.
+        await asyncio.sleep(0.1)
+        self.chat_history = ""
+        print(len(self.response))
+        yield
 
+        for i in range(len(self.response)):
+            # Pause to show the streaming effect.
+            await asyncio.sleep(0.1)
+            # Add one letter at a time to the output.
+            print(self.chat_history)
+            self.chat_history = self.chat_history + self.response[i]
+        
+            yield
 
 
 def textBox() -> rx.Component:
      return rx.box(
         rx.container(
             rx.card(
-                rx.text_area(value=State.prompt, read_only=True),
+                rx.text(State.response),
                 rx.input(placeholder="Response here",
                          on_change=State.set_prompt,
                          value=State.prompt),
@@ -90,8 +109,6 @@ def textBox() -> rx.Component:
         background_color="var(--gray-3)",
         width="100%",
     )
-
-
 
 
 def index() -> rx.Component:
@@ -108,56 +125,18 @@ def index() -> rx.Component:
     
     return rx.center(
         rx.box(
-            rx.image(src=State.background_image_url, width="20em"),
+            rx.image(src=State.image_url, width="20em"),
             rx.image(src=State.character_image_url, width="20em"),
             #style=image_style
         ),
         textBox(),
-        rx.button("Generate Image", on_click=State.get_and_replace_image, width="25em"),
-        rx.button("Generate Character Image", on_click=State.get_character, width="25em"),
+        rx.button("Generate Image", on_click=State.update_state, width="25em"),
+        #rx.button("Generate Character Image", on_click=State.get_character, width="25em"),
         flex_direction="column",
         width="100%",
     )
 
-def home() -> rx.Component:
-    home_style = {
-         "display": "flex",
-        "flex-direction": "column",
-        "align-items": "center",
-        # "justify-content": "center",
-        "height": "100vh"
-    }
-    title_style = {
-       
-        "font-size": "7rem",
-        "font-weight": "bold",
-        "margin-bottom": "20px"
-
-    }
-    subheading_title = {
-         "font-size": "1.5rem",
-        "margin-bottom": "20px"
-    }
-    return rx.center(
-        rx.flex(
-             rx.heading("GenVN", style=title_style),
-            rx.center(
-               
-                rx.text("A choose your own adventure story powered by LLMs",style=subheading_title),
-            
-            ),
-
-           rx.link(rx.button("Get Fantasizing"), href="http://localhost:3000/story/"),
-            
-
-            direction="column",
-            spacing="3",
-        ),
-        style=home_style
-    )
-    
-
 
 app = rx.App()
 app.add_page(index, route ="/story")
-app.add_page(home, route="/")
+app.add_page(home_page.home, route="/")
