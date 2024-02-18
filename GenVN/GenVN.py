@@ -49,7 +49,7 @@ class State(rx.State):
     """The app state."""
     response = "Welcome to the world of GenVN! This is the response box; as soon as you write your first prompt, your reply will spawn here."
     prompt = ""
-    background_image_url = "/black_background.jpeg"
+    image_url = "/black_background.jpeg"
     character_image_url = ""
     prompts_given = 0 # Number of prompts inputted thus far
     summary = "" #summary of the story we keep and update constantly
