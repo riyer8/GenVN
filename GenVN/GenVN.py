@@ -31,11 +31,11 @@ input_data = {
     "aspect_ratio": "landscape",
     "guidance_scale": 40,
     "negprompt": "deformed, bad anatomy, disfigured, poorly drawn face",
-    "prompt": "landscape of an astronaut with the face of a tiger, sitting in a forest, looking at the sunset, surreal",
+    "prompt": "landscape, dark castle, brooding, photo-realistic, raindrops in the foreground, knight in armor looking at castle from cliff, hyper-detailed skin texture illuminated by moon light, dragon circling castle, perfect anatomy, wet-to-wet background technique by Misilbu, hyper detailed 8k painting, 8k concept art portrait by Greg Rutkowski Artgerm WLOP Alphonse Beeple Caravaggio, muted colors, watercolor style, bokeh, f1.0 lens",
     "samples": 1,
     "seed": 943134198,
     "steps": 70,
-    "style": "anime"
+    "style": "no-style"
 },
 "img_mod": {
   "prompt": "a man wearing a leather jacket",
@@ -50,10 +50,10 @@ image_output = None
 
 class State(rx.State):
     """The app state."""
-    response = "Welcome to the world of GenVN! This is the response box; as soon as you write your first prompt, your reply will spawn here."
+    response = "Welcome to the world of GenVN! This is the response box; as soon as you write your first prompt, a reply will spawn here."
     responses = ["", "", ""]
     prompt = ""
-    image_url = "/black_background.jpeg"
+    image_url = monster_client.generate(models["image"], input_data["img"])["output"][0]
     character_image_url = ""
     prompts_given = 0 # Number of prompts inputted thus far
     character_description = ""
