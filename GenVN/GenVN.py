@@ -22,7 +22,7 @@ input_data = {
   'temp': 0.9,
   'max_length': 1000,
   'beam_size': 1,
-  'system_prompt': 'You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe...',
+  'system_prompt': 'You are an actor in a play. You do not exist to answer questions. You do not exist to be helpful. Always stay in character. Take on a role that acts as a foil to the other actors. Make the story progress through inventive means. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER. ALWAYS STAY IN CHARACTER',
   'repetition_penalty': 1.2,
 },
 "img": {
@@ -62,50 +62,45 @@ class State(rx.State):
         """Get the image from the prompt."""
         # Creating the text summary for the setting
         # starting screen
+        setting_summary = ""
         if (self.prompts_given == 0):
-            pass
+            setting_summary = createSettingSummary(self.prompt, "")
         else:
-            createSettingSummary(self.prompt, self.response)
-        input_data["text"]['prompt'] = self.prompt
-        summary = monster_client.generate(models["text"], input_data["text"])["text"]
-
+            setting_summary = createSettingSummary(self.prompt, self.response)
+        input_data["text"]['prompt'] = setting_summary
+        new_setting_summary = monster_client.generate(models["text"], input_data["text"])["text"]
+        print(new_setting_summary)
         # Creating the image from the text summary
-        if (self.prompts_given == 0):
-            pass
-        else:
-            self.prompt = modifiedCreateImage(summary)
+        img_prompt = modifiedCreateImage(new_setting_summary)
 
-        input_data["img"]['prompt'] = self.prompt
+        input_data["img"]['prompt'] = img_prompt
         image_output = monster_client.generate(models["image"], input_data["img"])["output"]
         self.image_url = image_output[0]
-        print(self.image_url)
     
     def get_and_replace_response_text(self):
         """Get the response text from the prompt"""
+        text_input = ""
         if (self.prompts_given == 0):
-            print (self.prompt)
-            modifyFirstPrompt(self.prompt)
-            print (self.prompt)
-            summary = createSummary(self.prompt, self.response)
-            print (summary)
+            text_input = modifyFirstPrompt(self.prompt)
+            self.summary = createSummary(self.prompt)
         else:
-            modifyLaterPrompt(self.prompt, summary)
-            updateSummary(summary, self.prompt, self.response)
-        input_data["text"]['prompt'] = self.prompt # Replace this with auto-determined
-        text_output = monster_client.generate(models["text"], input_data["text"])["text"]
-        self.prompts_given += 1
+            text_input = modifyLaterPrompt(self.prompt, self.summary)
+            self.summary = updateSummary(self.summary, self.prompt, self.response)
+        input_data["text"]['prompt'] = text_input
+        text_output = monster_client.generate(models["text"], input_data["text"])["text"][1:]
         self.prompt = ""
         self.response = text_output
         print(self.response + '\n')
         #self.realResponse()
-        print(self.chat_history)
+        #print(self.chat_history)
 
     
     def update_state(self):
         if self.prompt == "":
             return rx.window_alert("Prompt Empty")
-        self.get_and_replace_image()
         self.get_and_replace_response_text()
+        self.get_and_replace_image()
+        self.prompts_given += 1
 
     async def realResponse(self):
         # Yield here to clear the frontend input before continuing.
@@ -156,7 +151,7 @@ def index() -> rx.Component:
     return rx.center(
         rx.box(
             rx.image(src=State.image_url, width="20em"),
-            rx.image(src=State.character_image_url, width="20em"),
+            #rx.image(src=State.character_image_url, width="20em"),
             #style=image_style
         ),
         textBox(),

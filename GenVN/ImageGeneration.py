@@ -1,10 +1,6 @@
-from rxconfig import config
-import reflex as rx
-from monsterapi import client
-
 #create a summary of the setting based on the first prompt and response
 def createSettingSummary(prompt, response):
-    prompt = "Our previous prompt was \n" + prompt + "\n and your response was \n" + response + "\n Can you update the summary we have so far with the new details, without making it any longer than it was before? Please summarize the single, most important setting aspects and do not provide anything other than a single most important setting."
+    return "The user just said \n" + prompt + "\n. Your response prior to this input was \n" + response + ".\n Please describe the environment of this interaction based on the context in a series of randomly-determined contextually based comma-separated keywords and artistic stylings."
     
 
 def modifiedCreateImage(summary):
