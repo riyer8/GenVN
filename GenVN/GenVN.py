@@ -7,8 +7,8 @@ import env
 from GenVN import home_page
 from GenVN import navbar
 from GenVN.TextGeneration import modifyFirstPrompt, modifyLaterPrompt
-from GenVN.TextGeneration import modifyFirstPrompt, modifyLaterPrompt, createCharacter
 from GenVN.ImageGeneration import createSettingSummary, modifiedCreateImage
+from GenVN.CharacterGeneration import characterDescription, modifyCharacterPrompt
 
 docs_url = "https://reflex.dev/docs/getting-started/introduction"
 filename = f"{config.app_name}/{config.app_name}.py"
@@ -47,6 +47,7 @@ input_data = {
   "seed": 2414, 
 }}
 image_output = None
+character_output = None
 
 class State(rx.State):
     """The app state."""
@@ -60,7 +61,7 @@ class State(rx.State):
 
     processing = False
     complete = False
-    chat_history = ""
+
     def get_and_replace_image(self):
         """Get the image from the prompt."""
         # Creating the text summary for the setting
@@ -69,7 +70,7 @@ class State(rx.State):
         setting_summary = createSettingSummary(self.prompt, self.responses[0], self.responses[1], self.responses[2])
         input_data["text"]['prompt'] = setting_summary
         new_setting_summary = monster_client.generate(models["text"], input_data["text"])["text"]
-        print(new_setting_summary)
+
         # Creating the image from the text summary
         img_prompt = modifiedCreateImage(new_setting_summary)
 
@@ -91,17 +92,20 @@ class State(rx.State):
         self.responses.pop(0)
         self.responses.append(self.response)
         print(self.response + '\n')
-        #self.realResponse()
-        #print(self.chat_history)
 
-    
     def update_state(self):
         if self.prompt == "":
             return rx.window_alert("Prompt Empty")
         self.get_and_replace_response_text()
         self.get_and_replace_image()
         if (self.prompts_given == 0):
-            self.character_description = createCharacter(self.prompt)
+            self.character_description = characterDescription(self.prompt)
+            input_data["text"]['prompt'] = self.character_description
+            characteristics = monster_client.generate(models["text"], input_data["text"])["text"][1:]
+            character_output = modifyCharacterPrompt(characteristics)
+            input_data["img"]['prompt'] = character_output
+            character_output = monster_client.generate(models["image"], input_data["img"])["output"]
+            self.character_image_url = character_output[0]
         self.prompts_given += 1
 
     async def realResponse(self):
@@ -119,7 +123,6 @@ class State(rx.State):
             self.chat_history = self.chat_history + self.response[i]
         
             yield
-
 
 def textBox() -> rx.Component:
      return rx.box(
