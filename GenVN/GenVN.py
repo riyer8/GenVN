@@ -66,8 +66,11 @@ class State(rx.State):
     def get_and_replace_response_text(self):
         """Get the response text from the prompt"""
         if (prompts_given == 0):
+            print (self.prompt)
             modifyFirstPrompt(self.prompt)
+            print (self.prompt)
             summary = createSummary(self.prompt, self.response)
+            print (summary)
         else:
             modifyLaterPrompt(self.prompt, summary)
             updateSummary(summary, self.prompt, self.response)
