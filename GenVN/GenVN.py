@@ -22,13 +22,14 @@ input_data = {
   'repetition_penalty': 1.2,
 },
 "img": {
-  'prompt': 'HD photo of an astronaut with the face of a tiger, sitting in a forest, looking at the sunset, surreal',
-  'negprompt': 'unreal, fake, meme, joke, disfigured, poor quality, bad, ugly',
-  'samples': 2,
-  'steps': 50,
-  'aspect_ratio': 'square',
-  'guidance_scale': 7.5,
-  'seed': 2414,
+    "aspect_ratio": "landscape",
+    "guidance_scale": 40,
+    "negprompt": "deformed, bad anatomy, disfigured, poorly drawn face",
+    "prompt": "landscape of an astronaut with the face of a tiger, sitting in a forest, looking at the sunset, surreal",
+    "samples": 1,
+    "seed": 943134198,
+    "steps": 70,
+    "style": "anime"
 },
 "img_mod": {
   "prompt": "a man wearing a leather jacket",
@@ -39,6 +40,7 @@ input_data = {
   "strength": 40,
   "seed": 2414, 
 }}
+image_output = None
 
 class State(rx.State):
     """The app state."""
@@ -48,21 +50,14 @@ class State(rx.State):
 
     processing = False
     complete = False
-    # Returns llama generated text
-    # result = monster_client.generate(models["text"], input_data["text"])
 
     def get_image(self):
         """Get the image from the prompt."""
         if self.prompt == "":
             return rx.window_alert("Prompt Empty")  
-        self.background_image_url = "/favicon.ico" #Here we can get the api involved to get the image
-        self.prompt = ""
-
-    def get_character(self):
-        """to get the character"""
-        if self.prompt == "":
-            return rx.window_alert("Prompt Empty")  
-        self.character_image_url = "/favicon.ico" #Here we can get the api involved to get the image for charcter
+        input_data["img"]['prompt'] = self.prompt # Replace this with auto-determined
+        image_output = monster_client.generate(models["image"], input_data["img"])["output"]
+        self.image_url = image_output[0]
         self.prompt = ""
 
 
